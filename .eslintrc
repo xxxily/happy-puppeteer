@@ -1,0 +1,13 @@
+{
+  "env": {
+    "mocha": true,
+    "es6": true
+  },
+  "plugins": ["import", "node", "promise", "standard"],
+  "extends": ["standard"],
+  "rules": {},
+  "overrides": [],
+  "parserOptions": {
+    "ecmaVersion": 8
+  }
+}
