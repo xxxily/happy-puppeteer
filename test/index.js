@@ -13,7 +13,7 @@ const myPptr = new HappyPuppeteer({
   app: {
     defaultPage: 'http://jandan.net/top',
     /* 拦截资源类型，可选值：image|stylesheet|font|script|xhr|other */
-    // interceptResourceType: ['image', 'font', 'other'],
+    interceptResourceType: ['font'],
     /* 拦截url */
     interceptUrl: [],
     replaceUrl: [],
@@ -22,9 +22,9 @@ const myPptr = new HappyPuppeteer({
     cryptoType: 'md5',
     cacheDir: path.join(rootPath, 'browser/pptr/cache'),
     cacheRules: {
-      // resourceType: ['image', 'xhr'],
-      // url: [],
-      // match: async function (res) { return true }
+      resourceType: ['image', 'xhr'],
+      url: [],
+      match: null
     },
     printConsoleMsg: false,
     pagesHandlerFilesDir: '',
@@ -46,16 +46,12 @@ const myPptr = new HappyPuppeteer({
     ]
   },
   chromeLaunch: {
-    chromeFlags: [
-      // '--disable-setuid-sandbox',
-      // '--headless'
-      // '--disable-gpu'
-    ],
-    // chromePath: 'D:\\Program Files\\MyChrome\\Chrome\\chrome.exe',
+    chromeFlags: [],
     userDataDir: path.join(rootPath, '.browser/userData/'),
     logLevel: 'info',
     output: 'json'
   }
 })
+
 myPptr.start()
 // myPptr.stop()
