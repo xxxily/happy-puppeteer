@@ -11,17 +11,23 @@ const chromeLauncher = require('chrome-launcher')
 const puppeteer = require('puppeteer')
 const request = require('request')
 const util = require('util')
+const utils = require('./utils/index')
 const path = require('path')
 const JsonFile = require('./jsonFile')
-const rootPath = require('./rootPath')
+const appConf = require('../config/app.conf')
 const launchConf = require('../config/chrome.launch.conf')
-const appLog = new JsonFile(path.join(rootPath, 'log/appLog.json'))
+const WebsiteCache = require('./sqlite3/websiteCache')
 
 class HappyPuppeteer {
   constructor (config) {
-    this._config = {}
+    this._config = appConf || {}
+    this._config.chromeLaunch = launchConf || {}
+
     this.browser = null
     this.chrome = null
+
+    /* 对外提供WebsiteCache是为了方便外部程序对存储下的请求信息进行分析加工 */
+    this.WebsiteCache = WebsiteCache
 
     this.setConfig(config || {})
   }
@@ -40,8 +46,10 @@ class HappyPuppeteer {
    * @param config {Object} -可选 实例运行时的相关配置，如果不传则使用默认配置
    */
   setConfig (config) {
-    this._config = util.merge(this._config, config || {})
+    this._config = utils.merge(this._config, config || {})
   }
+
+  getConfig () { return this._config }
 
   /**
    * 启动HappyPuppeteer实例
@@ -51,10 +59,13 @@ class HappyPuppeteer {
   async start (config) {
     const t = this
 
-    if (util.isObj(config)) {
+    if (utils.isObj(config)) {
       t.setConfig(config)
     }
 
+    const conf = t.getConfig()
+    const logFile = path.join(conf.logDir, 'appLog.json')
+    const appLog = new JsonFile(logFile)
     const runLog = await appLog.read()
 
     /**
@@ -68,10 +79,10 @@ class HappyPuppeteer {
     }
 
     // Launch chrome using chrome-launcher.
-    const chrome = await chromeLauncher.launch(launchConf)
+    const chrome = await chromeLauncher.launch(conf.chromeLaunch)
     t.chrome = chrome
 
-    launchConf.port = chrome.port
+    conf.chromeLaunch.port = chrome.port
 
     /* 记录下运行日志 */
     appLog.write({
@@ -85,6 +96,8 @@ class HappyPuppeteer {
       browserWSEndpoint: webSocketDebuggerUrl,
       defaultViewport: null
     })
+
+    browser.happyPuppeteer = this
     t.browser = browser
 
     /* 开启全局请求拦截，其它处理器会在拦截器正常工作后统一注入 */

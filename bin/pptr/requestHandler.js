@@ -1,9 +1,10 @@
+const appConfigHandler = require('./appConfigHandler')
 const utils = require('../utils/index')
 module.exports = async function (req, page) {
   /* 增加休眠(挂起)方法 */
   req.sleep = utils.sleep
 
-  const appConf = require('../../config/app.conf.js')
+  const appConf = appConfigHandler.getAppConfig(page)
   req.abortReq = function () {
     if (!req._isAbort_) {
       req.abort()

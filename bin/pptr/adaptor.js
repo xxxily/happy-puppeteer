@@ -2,12 +2,13 @@ const path = require('path')
 const rootPath = require('../rootPath')
 const utils = require('../utils/index')
 const cacheResponse = require('./cacheResponse')
+const appConfigHandler = require('./appConfigHandler.js')
 
 let browser = null
 
 /* 配置自动热更新 */
 const pageMatCache = {}
-let appConf = require('./appConfigHandler.js')
+let appConf = appConfigHandler.getAppConfig()
 
 /* 保证数据结构正确 */
 appConf = appConf || {}
@@ -106,6 +107,9 @@ function pageMatcher (page, disableCache) {
 
   /* 保存浏览器实例，用于其它异步操作 */
   browser = page.browser()
+
+  /* 更新happyPuppeteer的自定义的配置 */
+  appConf = appConfigHandler.getAppConfig(page)
 
   const sourceUrl = page.url()
 

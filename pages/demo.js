@@ -13,7 +13,7 @@ module.exports = {
   /* 拦截资源类型，可选值：image|stylesheet|font|script|xhr|other */
   // interceptResourceType: ['image', 'font', 'other'],
   onRequest: async function (req, page) {},
-  cacheDir: path.join(rootPath, 'browser/images.collecter'),
+  cacheDir: path.join(rootPath, '.browser/images.collecter'),
   cacheRules: {
     resourceType: ['image'],
     url: [],

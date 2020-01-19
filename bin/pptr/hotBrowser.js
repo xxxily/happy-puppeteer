@@ -6,11 +6,7 @@
  * @date         2019/12/11 下午3:51
  * @github       https://github.com/xxxily
  */
-// const path = require('path')
-// const rootPath = require('../rootPath')
-// const pagesBasePath = path.join(rootPath, 'pages/')
 const hotPage = require('./hotPage')
-
 module.exports = async function (browser) {
   /* 新开一个可被管理的page页 */
   const newPage = await browser.newPage()

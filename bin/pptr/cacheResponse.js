@@ -1,13 +1,13 @@
 const fs = require('fs-extra')
 const path = require('path')
 const utils = require('../utils/index')
-const appConf = require('./appConfigHandler.js')
 const WebsiteCache = require('../sqlite3/websiteCache')
 
 module.exports = function (res, conf) {
   if (!conf || !conf.cacheRules) return
-  const cacheDir = conf.cacheDir || appConf.cacheDir
-  const cryptoType = conf.cryptoType || appConf.cryptoType
+  const cacheDir = conf.cacheDir
+  const cryptoType = conf.cryptoType || 'md5'
+
   const cache = new WebsiteCache(cacheDir, cryptoType)
 
   const cacheResponse = {

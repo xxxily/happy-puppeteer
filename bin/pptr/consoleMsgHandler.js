@@ -1,4 +1,8 @@
 const Pipeline = require('../Pipeline')
+const adaptor = require('./adaptor')
+const appConfigHandler = require('./appConfigHandler')
+let appConf = appConfigHandler.getAppConfig()
+
 /* 将事件产生的数据按事件触发的先后顺序进行输出 */
 const msgPipeline = new Pipeline(async function (data) {
   const { msg, page } = data
@@ -18,7 +22,6 @@ const msgPipeline = new Pipeline(async function (data) {
     }
 
     /* 在node控制台打印浏览器的控制台输出 */
-    const appConf = require('../../config/app.conf')
     if (appConf.printConsoleMsg === true) {
       /* 输出全部类型的消息 */
       console[msg.type()].apply(console, args)
@@ -31,14 +34,15 @@ const msgPipeline = new Pipeline(async function (data) {
 
     /* 通过适配器，适配到各个页面的输出规则 */
     msg.args = args
-    const adaptor = require('./adaptor')
     adaptor.printConsoleMsg(msg, page)
   }
 })
 
 module.exports = (msg, page) => {
+  /* 更新happyPuppeteer的自定义的配置 */
+  appConf = appConfigHandler.getAppConfig(page)
+
   /* 通过console适配器，将浏览器的console分配到给各个pages进行单独处理 */
-  const adaptor = require('./adaptor')
   adaptor.console(msg, page)
 
   /* 按顺序进行纯打印输出 */

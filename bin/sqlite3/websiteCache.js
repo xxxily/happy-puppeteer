@@ -4,7 +4,8 @@ const sqlite3 = require('better-sqlite3')
 const utils = require('../utils/index')
 const SQL = require('./sqlFragment')
 const crypto = require('crypto')
-const appConf = require('../../config/app.conf')
+const appConfigHandler = require('../pptr/appConfigHandler')
+const appConf = appConfigHandler.getAppConfig()
 const md5 = text => crypto.createHash('md5').update(String(text)).digest('hex')
 
 /* 保存创建过的实例，进行复用 */

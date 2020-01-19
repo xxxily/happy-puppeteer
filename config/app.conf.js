@@ -8,10 +8,10 @@ const appConf = {
   /* 拦截url */
   interceptUrl: [],
   replaceUrl: [],
-  logLevel: 'info',
+  logDir: path.join(rootPath, 'log/'),
   /* 配置全局使用的加密类型，可以是md5或sha256 */
   cryptoType: 'md5',
-  cacheDir: path.join(rootPath, 'browser/pptr/cache'),
+  cacheDir: path.join(rootPath, '.browser/pptr/cache'),
   /**
    * 缓存规则，三条规则为并的关系，即叠加限定
    * 例如同时配置了 resourceType:['image'], url: ['www.baidu.com'],
@@ -37,6 +37,7 @@ const appConf = {
    * 例如 log|error|info|table等
    */
   printConsoleMsg: false,
+  pagesDir: '',
   /* 不建议在此处配置pages选项，请在pages目录下进行逐个配置 */
   pages: [
     {

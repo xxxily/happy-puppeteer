@@ -1,5 +1,6 @@
-const appConf = require('../../config/app.conf')
+const appConfigHandler = require('./appConfigHandler')
 module.exports = async function (page) {
+  const appConf = appConfigHandler.getAppConfig(page)
   if (appConf.defaultPage) {
     await page.goto(appConf.defaultPage)
   }

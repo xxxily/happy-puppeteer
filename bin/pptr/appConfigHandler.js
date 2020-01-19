@@ -1,7 +1,7 @@
 const path = require('path')
 const rootPath = require('../rootPath')
 const glob = require('fast-glob')
-const appConf = require('../../config/app.conf')
+let appConf = require('../../config/app.conf')
 if (!Array.isArray(appConf.pages)) {
   appConf.pages = []
 }
@@ -17,4 +17,20 @@ pagesConfFiles.forEach(function (pagesFile) {
   appConf.pages.push(pagesConf)
 })
 
-module.exports = appConf
+module.exports = {
+  /**
+   * 获取app的配置信息
+   * @param page {page} -可选 默认只能获取到固定的配置信息，需要动态地获取到用户传入的配置信息，则需要通过page对象下查找
+   * @returns {Object}
+   */
+  getAppConfig (page) {
+    if (page && page.browser) {
+      const browser = page.browser()
+      if (browser.happyPuppeteer) {
+        appConf = browser.happyPuppeteer.getConfig()
+      }
+    }
+
+    return appConf || {}
+  }
+}

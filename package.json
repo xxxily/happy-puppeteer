@@ -13,7 +13,8 @@
     "url": "https://github.com/xxxily/happy-puppeteer/issues"
   },
   "scripts": {
-    "start": "node bin/index.js"
+    "start": "node bin/index.js",
+    "test": "node test/index.js"
   },
   "devDependencies": {
     "eslint": "^6.7.2",
