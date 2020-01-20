@@ -1,10 +1,6 @@
-const path = require('path')
-const rootPath = require('../rootPath')
 const utils = require('../utils/index')
 const cacheResponse = require('./cacheResponse')
 const appConfigHandler = require('./appConfigHandler.js')
-
-let browser = null
 
 /* 配置自动热更新 */
 const pageMatCache = {}
@@ -14,47 +10,6 @@ let appConf = appConfigHandler.getAppConfig()
 appConf = appConf || {}
 if (!Array.isArray(appConf.pages)) {
   appConf.pages = []
-}
-
-/**
- * 热更新模式下，由于adaptor模块缓存会不断清除，然后重新加载，
- * 所以会导致下面的函数不断初始化，如果在onChange里面进行console输出
- * 将看到大量重复调用的打印内容，算是正常现象
- */
-if (module.hot) {
-  module.hot.trigger = true
-  module.hot.onReload(async function (filePath) {
-    /* 尝试对browser实例的第一个page Tab进行刷新，应用最新变更的代码 */
-    if (browser) {
-      let reloadUrl = ''
-
-      /* 尝试定位到被修改的页面地址 */
-      if (filePath.startsWith(path.join(rootPath, 'pages/'))) {
-        const triggerConf = require(filePath)
-        if (triggerConf && triggerConf.defaultEntry) {
-          reloadUrl = triggerConf.defaultEntry
-        }
-      }
-
-      const pages = await browser.pages()
-      const page = pages[0]
-
-      if (reloadUrl && page.url() !== reloadUrl) {
-        page.goto(reloadUrl)
-      } else {
-        page.reload()
-      }
-
-      /**
-       * 如果page不处于可视区域，则尝试将其置于可视范围
-       * 注：置于可视范围后，浏览器会重新获得焦点，其它软件则自动失去焦点
-       */
-      const vState = await page.evaluate(() => document.visibilityState).catch(() => {})
-      if (vState !== 'visible') {
-        await page.bringToFront().catch(() => {})
-      }
-    }
-  })
 }
 
 /**
@@ -105,18 +60,24 @@ function pageMatcher (page, disableCache) {
     return []
   }
 
-  /* 保存浏览器实例，用于其它异步操作 */
-  browser = page.browser()
-
   /* 更新happyPuppeteer的自定义的配置 */
   appConf = appConfigHandler.getAppConfig(page)
 
+  const happyPuppeteer = appConfigHandler.getHappyPuppeteer(page)
   const sourceUrl = page.url()
 
   /* 如果缓存已经有相关的匹配结果，则直接取缓存结果，减少遍历次数 */
-  if (!disableCache && pageMatCache[sourceUrl]) {
-    // console.log('从缓存得到的匹配结果')
-    return pageMatCache[sourceUrl]
+  const cacheResult = pageMatCache[sourceUrl]
+  if (!disableCache && cacheResult) {
+    const pageFilePath = cacheResult._filePath
+    if (happyPuppeteer && pageFilePath && happyPuppeteer.pagesConfig[pageFilePath]) {
+      /* 获取跟全局保持一致的page配置 */
+      return happyPuppeteer.pagesConfig[pageFilePath]
+    } else {
+      /* 纯缓存配置 */
+      console.log('从缓存得到的匹配结果', pageFilePath, happyPuppeteer.pagesConfig)
+      return cacheResult
+    }
   }
 
   const matchResult = []
@@ -265,4 +226,5 @@ const adaptor = {
     })
   }
 }
+
 module.exports = adaptor

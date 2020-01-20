@@ -37,6 +37,7 @@ const appConf = {
    * 例如 log|error|info|table等
    */
   printConsoleMsg: false,
+  hotReload: true,
   pagesDir: '',
   /* 不建议在此处配置pages选项，请在pages目录下进行逐个配置 */
   pages: [

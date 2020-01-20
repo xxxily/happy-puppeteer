@@ -12,7 +12,7 @@ const happyPuppeteer = require('../bin/index')
 happyPuppeteer.start({
   chromeLaunch: {
     chromeFlags: [
-      '--headless'
+      // '--headless'
     ],
     userDataDir: path.join(rootPath, '.browser/userData/'),
     logLevel: 'info',
@@ -35,7 +35,7 @@ happyPuppeteer.start({
     match: null
   },
   printConsoleMsg: false,
-  pagesDir: '',
+  pagesDir: path.join(__dirname, '../pages'),
   /* 不建议在此处配置pages选项，请在pages目录下进行逐个配置 */
   pages: [
     {
