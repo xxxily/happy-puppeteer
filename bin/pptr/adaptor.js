@@ -69,13 +69,21 @@ function pageMatcher (page, disableCache) {
   /* 如果缓存已经有相关的匹配结果，则直接取缓存结果，减少遍历次数 */
   const cacheResult = pageMatCache[sourceUrl]
   if (!disableCache && cacheResult) {
-    const pageFilePath = cacheResult._filePath
-    if (happyPuppeteer && pageFilePath && happyPuppeteer.pagesConfig[pageFilePath]) {
+    if (happyPuppeteer) {
       /* 获取跟全局保持一致的page配置 */
-      return happyPuppeteer.pagesConfig[pageFilePath]
+      const result = []
+      for (let i = 0; i < cacheResult.length; i++) {
+        const conf = cacheResult[i]
+        if (happyPuppeteer.pagesConfig[conf._filePath]) {
+          result.push(happyPuppeteer.pagesConfig[conf._filePath])
+        } else {
+          result.push(conf)
+        }
+      }
+      return result
     } else {
       /* 纯缓存配置 */
-      console.log('从缓存得到的匹配结果', pageFilePath, happyPuppeteer.pagesConfig)
+      console.log('从缓存得到的匹配结果')
       return cacheResult
     }
   }
@@ -83,6 +91,7 @@ function pageMatcher (page, disableCache) {
   const matchResult = []
   appConf.pages.forEach((conf) => {
     if (conf.enabled !== false && urlMatcher(sourceUrl, conf.matchRules)) {
+      // console.log('匹配到的规则数据：', conf)
       matchResult.push(conf)
     }
   })

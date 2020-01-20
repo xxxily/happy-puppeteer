@@ -239,7 +239,7 @@ class HappyPuppeteer {
       defaultViewport: null
     })
 
-    browser.happyPuppeteer = this
+    browser.happyPuppeteer = t
     t.browser = browser
 
     /* 开启全局请求拦截，其它处理器会在拦截器正常工作后统一注入 */
