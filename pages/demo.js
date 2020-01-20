@@ -23,7 +23,7 @@ module.exports = {
       const imageBuf = await res.buffer()
 
       if (imageBuf.length > 1024 * 30 && !url.includes('jandan.net')) {
-        // console.log('图片已保存----：', url)
+        console.log('图片已保存：', url)
         return true
       }
     }

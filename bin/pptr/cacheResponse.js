@@ -184,8 +184,7 @@ module.exports = function (res, conf) {
 
         /* 检测是否命中match函数规则 */
         if (matchRule instanceof Function) {
-          let matchRuleResult = await matchRule(res).catch(err => {
-            matchRuleResult = false
+          const matchRuleResult = await matchRule(res).catch(err => {
             console.error('进行函数规则匹配时出错：', err)
           })
 
