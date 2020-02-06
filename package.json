@@ -2,10 +2,7 @@
   "name": "happy-puppeteer",
   "version": "0.0.1",
   "description": "happy-puppeteer",
-  "author": "blaze",
-  "publishConfig": {
-    "registry": "https://www.npmjs.com/"
-  },
+  "author": "Blaze",
   "homepage": "https://github.com/xxxily/happy-puppeteer",
   "repository": "https://github.com/xxxily/happy-puppeteer",
   "git": "https://github.com/xxxily/happy-puppeteer.git",
