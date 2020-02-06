@@ -14,6 +14,7 @@ happyPuppeteer.start({
     chromeFlags: [
       // '--headless'
     ],
+    chromePath: 'D:\\Program Files\\MyChrome\\Chrome\\chrome.exe',
     userDataDir: path.join(rootPath, '.browser/userData/'),
     logLevel: 'info',
     output: 'json'
